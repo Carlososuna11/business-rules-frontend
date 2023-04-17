@@ -2,6 +2,7 @@
   import Background from './components/Background.svelte';
   import Footer from './components/Footer.svelte';
   import Navbar from './components/Navbar.svelte';
+  import NavbarMobile from './components/NavbarMobile.svelte';
   import '../styles/global.css';
   import '../styles/index.css';
 </script>
@@ -11,6 +12,9 @@
   <div class="w-full min-h-screen flex flex-col font-Sans bg-[#A9A9A930]">
     <div class="hidden lg:block">
       <Navbar />
+    </div>
+    <div class="lg:hidden">
+      <NavbarMobile />
     </div>
     <div class="w-full lg:w-[75%] lg:mx-auto mt-24 lg:mt-14 pb-4">
       <div

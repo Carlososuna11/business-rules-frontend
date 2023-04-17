@@ -11,6 +11,11 @@
     <ProjectCard />
     <ProjectCard />
     <ProjectCard />
+    <ProjectCard />
+    <ProjectCard />
+    <ProjectCard />
+    <ProjectCard />
+    <ProjectCard />
   </div>
   <div
     class="w-full flex items-center justify-center flex-col py-4 cursor-pointer rounded-md hover:bg-[#FFFFFF50]"

@@ -37,6 +37,11 @@
       "type": "test",
       "hidden": false,
       "section": "✅ Testing"
+    },
+    {
+        "type":"ci",
+        "hidden":false,
+        "section":"🔧 CI/CD"
     }
   ]
 }

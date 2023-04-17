@@ -14,5 +14,7 @@
     />
     <Search />
   </div>
-  <Projects />
+  <div class="w-full lg:mx-auto">
+    <Projects />
+  </div>
 </div>
