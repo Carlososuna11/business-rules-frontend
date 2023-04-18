@@ -5,7 +5,8 @@
   import Modal from '../components/Modal.svelte';
 
   // Creation Project Modal
-  export let showCreateProjectModal: boolean;
+  // TODO: get from query params the boolean
+  let showCreateProjectModal: boolean = false;
   let titleCreateProjectModal: string = 'Proyecto Nuevo';
   let descriptionCreateProjectModal: string = [
     'Esta función te permite',
@@ -18,7 +19,8 @@
   ].join(' ');
 
   // Import Project Modal
-  export let showImportProjectModal: boolean;
+  // TODO: get from query params the boolean
+  let showImportProjectModal: boolean = false;
   let titleImportProjectModal: string = 'Importar Proyecto';
   let descriptionImportProjectModal: string = [
     'Importar Proyecto te ayuda a',
