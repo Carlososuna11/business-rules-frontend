@@ -1,7 +1,10 @@
-<script>
+<script lang="ts">
   import SearchIcon from '../../assets/svg/search-icon.svg';
   import ImportProjectIcon from '../../assets/svg/import-file-icon.svg';
   import CreateProjectIcon from '../../assets/svg/create-file-icon.svg';
+
+  export let showCreateProjectModal: boolean;
+  export let showImportProjectModal: boolean;
 </script>
 
 <div
@@ -19,8 +22,12 @@
       <img src={SearchIcon} alt="Search icon" />
     </div>
   </div>
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
     class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer"
+    on:click={() => {
+      showImportProjectModal = true;
+    }}
   >
     <p class="hidden lg:block text-xs font-medium font-Syne">
       Importar Proyecto
@@ -28,8 +35,12 @@
     <p class="lg:hidden text-xs font-medium font-Syne">Importar</p>
     <img src={ImportProjectIcon} class="w-6 h-6" alt="Search icon" />
   </div>
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
     class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer"
+    on:click={() => {
+      showCreateProjectModal = true;
+    }}
   >
     <p class="hidden lg:block text-xs font-medium font-Syne">Nuevo Proyecto</p>
     <p class="lg:hidden text-xs font-medium font-Syne">Nuevo</p>
