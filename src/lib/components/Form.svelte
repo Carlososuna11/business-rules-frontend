@@ -1,47 +1,19 @@
 <script lang="ts">
-  import CloseIcon from '../../assets/svg/close-icon.svg';
   import LogoIcon from '../../assets/svg/brand-blue.svg';
-  export let showModal: boolean;
   export let title: string;
   export let description: string;
-  let isOut: boolean = false;
-
-  const checkScroll = () => {
-    showModal
-      ? (document.body.style.overflow = 'hidden')
-      : (document.body.style.overflow = 'auto');
-  };
-
-  const closeModal = () => {
-    isOut = true;
-    setTimeout(() => {
-      isOut = false;
-      showModal = false;
-      checkScroll();
-    }, 900);
-  };
-
-  $: checkScroll();
 </script>
 
-<div class="w-full h-screen fixed left-0 top-0 bg-[#000000ce] z-50">
-  <div class="w-full h-full flex items-center justify-center">
+<div class="w-full h-full relative z-20 pt-48">
+  <div class="flex items-center justify-center h-full w-full">
     <div
-      class={`w-[90%] sm:w-[450px] lg:w-[650px] h-[570px] flex items-center justify-center bg-[#FAFAFA] rounded-xl slideInDown ${
-        isOut && 'slideOutUp'
-      }`}
+      class="w-[90%] sm:w-[450px] lg:w-[650px] h-auto flex items-center justify-center flex-col gap-4 rounded-xl border border-[#00000030] bg-[#FAFAFA] shadow-md overflow-y-auto"
     >
       <div class="w-full h-[96%] overflow-y-auto scroll">
         <div
           class="w-full h-full flex items-center flex-col gap-4 rounded-xl py-4 lg:py-8"
         >
           <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div
-            class="w-6 h-6 flex items-center justify-center flex-col self-end mr-5 cursor-pointer"
-            on:click={closeModal}
-          >
-            <img src={CloseIcon} class="w-full h-full" alt="Close icon" />
-          </div>
           <figure>
             <img src={LogoIcon} class="w-20" alt="Logo" />
           </figure>
