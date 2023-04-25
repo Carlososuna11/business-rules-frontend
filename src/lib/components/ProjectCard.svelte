@@ -25,19 +25,19 @@
   </div>
   <div class="mt-4 mb-2 w-full justify-evenly px-4 flex items-center">
     <div
-      class="flex lg:w-40 mr-2 items-center cursor-pointer border border-gray-700 rounded-md justify-between items-center p-2"
+      class="flex lg:w-40 mr-2 items-center cursor-pointer border border-gray-700 rounded-md justify-between items-center p-2 hover:bg-[#A6A6A645]"
     >
       <p>Ver</p>
       <img src={EyeIcon} class="w-6 h-6" alt="Eye icon" />
     </div>
     <div
-      class="flex lg:w-40 mr-2 items-center cursor-pointer border border-gray-700 rounded-md justify-between items-center p-2"
+      class="flex lg:w-40 mr-2 items-center cursor-pointer border border-gray-700 rounded-md justify-between items-center p-2 hover:bg-[#A6A6A645]"
     >
       <p>Editar</p>
       <img src={EditIcon} class="w-6 h-6" alt="Edit icon" />
     </div>
     <div
-      class="flex lg:w-40 items-center cursor-pointer border border-gray-700 rounded-md justify-between items-center p-2"
+      class="flex lg:w-40 items-center cursor-pointer border border-gray-700 rounded-md justify-between items-center p-2 hover:bg-[#A6A6A645]"
     >
       <p>Eliminar</p>
       <img src={DeleteIcon} class="w-6 h-6" alt="Trash icon" />

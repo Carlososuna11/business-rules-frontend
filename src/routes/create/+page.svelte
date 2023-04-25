@@ -80,7 +80,8 @@
       <div class="flex gap-2 justify-between">
         <button
           type="submit"
-          class="w-32 flex items-center justify-around px-2 py-2 text-xs text-white bg-[#051127] rounded-md mt-2"
+          class="w-32 flex items-center justify-around px-2 py-2 text-xs text-white bg-[#051127] rounded-md mt-2
+          hover:bg-[#505868]"
         >
           Crear Proyecto
           <img src={ArrowRightIcon} class="w-4" alt="Arrow left icon" />
