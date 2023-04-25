@@ -4,7 +4,7 @@
   export let description: string;
 </script>
 
-<div class="w-full h-full relative z-20 pt-48">
+<div class="w-full h-full relative z-20 pt-48 mb-10">
   <div class="flex items-center justify-center h-full w-full">
     <div
       class="w-[90%] sm:w-[450px] lg:w-[650px] h-auto flex items-center justify-center flex-col gap-4 rounded-xl border border-[#00000030] bg-[#FAFAFA] shadow-md overflow-y-auto"

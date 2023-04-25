@@ -38,7 +38,8 @@
           </div>
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div
-            class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer"
+            class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer
+            hover:bg-[#505868]"
             on:click={() => goto('/import')}
           >
             <p class="hidden lg:block text-xs font-medium font-Syne">
@@ -49,7 +50,8 @@
           </div>
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div
-            class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer"
+            class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer
+            hover:bg-[#505868]"
             on:click={() => goto('/create')}
           >
             <p class="hidden lg:block text-xs font-medium font-Syne">
