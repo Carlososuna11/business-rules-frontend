@@ -1,12 +1,46 @@
 <script lang="ts">
   import Title from '../lib/components/Title.svelte';
   import ProjectCard from '../lib/components/ProjectCard.svelte';
-  import AddMore from '../assets/svg/add-round-icon.svg';
   import SearchIcon from '../assets/svg/search-icon.svg';
   import ImportProjectIcon from '../assets/svg/import-file-icon.svg';
   import CreateProjectIcon from '../assets/svg/create-file-icon.svg';
   import { goto } from '$app/navigation';
+  import { api } from '../lib/services/api.services';
+  import { onMount } from 'svelte';
+  import InfiniteScroll from '../lib/components/InfiniteScroll.svelte';
+  import type { Project } from '../lib/types';
+  import moment from 'moment';
+
   let loadingMore: boolean = false;
+  let page = 1;
+  let limit = 10;
+  let nextUrl = '';
+  let projects: Project[] = [];
+  let newProjects: Project[] = [];
+
+  async function getProjects() {
+    loadingMore = true;
+    try {
+      console.log(page);
+      const response = await api.getProjects(page, limit);
+      nextUrl = response.next;
+      newProjects = response.data;
+    } catch (error) {
+      console.log(error);
+    }
+    loadingMore = false;
+  }
+
+  onMount(async () => {
+    await getProjects();
+  });
+
+  async function loadMore() {
+    page++;
+    await getProjects();
+  }
+
+  $: projects = [...projects, ...newProjects];
 </script>
 
 <div class="w-full lg:w-[75%] lg:mx-auto mt-24 lg:mt-14 pb-4">
@@ -68,15 +102,23 @@
         >
           <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!--  -->
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
+            {#each projects as project}
+              <ProjectCard
+                uuid={project.uuid}
+                title={project.name}
+                description={project.description}
+                lastUpdate={moment(project.updatedAt).format(
+                  'HH:mm A · MMM DD, YYYY'
+                )}
+                engineFile={project.engineFile}
+              />
+            {/each}
+            <InfiniteScroll
+              hasMore={newProjects.length > 0}
+              threshold={100}
+              on:loadMore={loadMore}
+              window={true}
+            />
           </div>
           <div
             class="w-full flex items-center justify-center flex-col py-4 cursor-pointer rounded-md hover:bg-[#FFFFFF50]"
@@ -85,9 +127,6 @@
               <div
                 class="w-4 h-4 rounded-full border-2 border-[#021529] border-l-transparent animate-spin"
               />
-            {:else}
-              <img src={AddMore} alt="Add icon" />
-              <p class="text-sm text-[#383838]">VER MÁS</p>
             {/if}
           </div>
         </section>

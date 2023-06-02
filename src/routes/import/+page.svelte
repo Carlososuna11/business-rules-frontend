@@ -1,9 +1,7 @@
 <script lang="ts">
   import Form from '../../lib/components/Form.svelte';
-  import { superForm } from 'sveltekit-superforms/client';
   import ImportBlackProjectIcon from '../../assets/svg/import-black-icon.svg';
   import ImportWhiteProjectIcon from '../../assets/svg/import-file-icon.svg';
-  import type { PageData } from './$types';
 
   let title: string = 'Importar Proyecto';
   let description: string = [
@@ -14,12 +12,6 @@
     'específica, lo que significa que puedes',
     'comenzar a trabajar sin perder tiempo.',
   ].join(' ');
-
-  export let data: PageData;
-
-  // const { form, errors, enhance, constraints } = superForm(data.form, {
-  //   validators: ,
-  // });
 </script>
 
 <Form {title} {description}>
