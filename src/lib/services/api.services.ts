@@ -1,5 +1,7 @@
 import { env } from '$env/dynamic/public';
-import type { Project, ProjectDto, DiagramDto } from '../types';
+import type { Project, ProjectDto, DiagramDto, ErrorResponse } from '../types';
+import axios, { AxiosError } from 'axios';
+import { alertStore } from '../stores';
 
 const BACKEND_URL = env.PUBLIC_BACKEND_BASE_URL;
 
@@ -11,15 +13,38 @@ const baseService = async (
   body?: object
 ) => {
   const url = `${BACKEND_URL}${path}`;
-  return await fetch(url, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...header,
-    },
-    body: JSON.stringify(body),
-    ...params,
-  });
+  try {
+    const response = await axios({
+      method,
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        ...header,
+      },
+      params,
+      data: body,
+    });
+    return response;
+  } catch (error) {
+    let message = 'Ups! Hubo un error. Revisa la consola para más detalles.';
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        const errorResponse = axiosError.response.data as ErrorResponse;
+        message = errorResponse.message;
+      }
+    } else {
+      message = String(error);
+    }
+    alertStore.set({
+      message: message,
+      color: 'red',
+      visible: true,
+    });
+    console.error(`Error Calling the API`, message);
+    console.error(error);
+    throw error;
+  }
 };
 
 const getProjects = async (
@@ -28,22 +53,24 @@ const getProjects = async (
   search?: string,
   sort?: string
 ) => {
-  // ignore search and sort if not provided
-  let query = `?page=${page}&limit=${limit}`;
-  query += search ? `&search=${search}` : '';
-  query += sort ? `&sort=${sort}` : '';
-  const response = await baseService(`/api/projects${query}`, 'GET');
-  return await response.json();
+  const params = {
+    page,
+    limit,
+    search,
+    sort,
+  };
+  const response = await baseService(`/api/projects`, 'GET', {}, params);
+  return response.data;
 };
 
 const getProject = async (uuid: string): Promise<Project> => {
   const response = await baseService(`/api/projects/${uuid}`, 'GET');
-  return await response.json();
+  return response.data;
 };
 
 const createProject = async (body: ProjectDto): Promise<Project> => {
   const response = await baseService(`/api/projects`, 'POST', {}, {}, body);
-  return await response.json();
+  return await response.data;
 };
 
 const updateProject = async (
@@ -57,17 +84,17 @@ const updateProject = async (
     {},
     body
   );
-  return await response.json();
+  return await response.data;
 };
 
 const deleteProject = async (uuid: string): Promise<void> => {
   const response = await baseService(`/api/projects/${uuid}`, 'DELETE');
-  return await response.json();
+  return await response.data;
 };
 
 const getDiagram = async (uuid: string): Promise<DiagramDto> => {
   const response = await baseService(`/api/projects/${uuid}/diagram`, 'GET');
-  return await response.json();
+  return await response.data;
 };
 
 export const api = {

@@ -1,4 +1,4 @@
 export type ProjectDto = {
   name: string;
-  description: string;
+  description?: string;
 };

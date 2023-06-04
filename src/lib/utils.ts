@@ -11,3 +11,18 @@ export const replaceStateWithQuery = (
   }
   history.replaceState(history.state, '', url);
 };
+
+interface SearchParams {
+  [key: string]: string;
+}
+
+export const getUrlSearchParams = (): SearchParams => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const params = {} as SearchParams;
+
+  for (const [key, value] of searchParams.entries()) {
+    params[key] = value;
+  }
+
+  return params;
+};
