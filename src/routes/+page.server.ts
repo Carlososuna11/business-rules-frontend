@@ -1,5 +1,4 @@
-import { fail } from '@sveltejs/kit';
-import { message, superValidate } from 'sveltekit-superforms/server';
+import { superValidate } from 'sveltekit-superforms/server';
 import { newProjectSchema, importProjectSchema } from '$lib/schemas/project';
 
 export const load = async () => {
@@ -12,15 +11,4 @@ export const load = async () => {
   });
 
   return { importForm, createForm };
-};
-
-export const actions = {
-  import: async ({ request }) => {
-    const importForm = await superValidate(request, importProjectSchema, {
-      id: 'importForm',
-    });
-
-    if (!importForm.valid) return fail(400, { importForm });
-    return message(importForm, 'Importación de Proyecto exitosa');
-  },
 };
