@@ -1,5 +1,11 @@
 import { env } from '$env/dynamic/public';
-import type { Project, ProjectDto, DiagramDto, ErrorResponse } from '../types';
+import type {
+  Project,
+  ProjectDto,
+  DiagramDto,
+  ImportProjectDto,
+  ErrorResponse,
+} from '../types';
 import axios, { AxiosError } from 'axios';
 import { alertStore } from '../stores';
 
@@ -97,6 +103,17 @@ const getDiagram = async (uuid: string): Promise<DiagramDto> => {
   return await response.data;
 };
 
+const importProject = async (body: ImportProjectDto): Promise<Project> => {
+  const response = await baseService(
+    `/api/projects/upload`,
+    'POST',
+    { 'Content-Type': 'multipart/form-data' },
+    {},
+    body
+  );
+  return await response.data;
+};
+
 export const api = {
   getProjects,
   getProject,
@@ -104,4 +121,5 @@ export const api = {
   updateProject,
   deleteProject,
   getDiagram,
+  importProject,
 };
