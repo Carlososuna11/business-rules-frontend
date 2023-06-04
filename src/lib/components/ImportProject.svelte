@@ -14,6 +14,20 @@
 
   let file: File | undefined;
 
+  const handleDragOver = (event: DragEvent) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: DragEvent) => {
+    event.preventDefault();
+    const dataTransfer = event.dataTransfer;
+    if (dataTransfer && dataTransfer.files && dataTransfer.files[0]) {
+      file = dataTransfer.files[0];
+      $form.file = file;
+      formDiv.requestSubmit();
+    }
+  };
+
   function handleFileInput(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -59,7 +73,11 @@
 </script>
 
 <form method="POST" action="?/import" use:enhance bind:this={formDiv}>
-  <label class="cursor-pointer">
+  <label
+    class="cursor-pointer"
+    on:dragover={handleDragOver}
+    on:drop={handleDrop}
+  >
     <div
       class="max-w-600 mx-auto p-8 border-2 border-dashed border-gray-300 rounded-md hover:border-gray-400 focus:outline-none"
     >

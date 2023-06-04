@@ -19,16 +19,18 @@
 
   /*******************************PAGINATION*********************************************/
   let loadingMore: boolean = false;
+  let searching: boolean = false;
   let page = 1;
   let limit = 6;
   let nextUrl = '';
   let projects: Project[] = [];
   let newProjects: Project[] = [];
+  let search: string = '';
 
   async function getProjects() {
     loadingMore = true;
     try {
-      const response = await api.getProjects(page, limit);
+      const response = await api.getProjects(page, limit, search);
       nextUrl = response.links.next;
       newProjects = response.data;
     } catch (error) {}
@@ -41,6 +43,32 @@
   }
 
   $: projects = [...projects, ...newProjects];
+
+  // if search is not empty, filter projects
+  const searchProjects = () => {
+    if (search && search.length > 0 && !searching) {
+      searching = true;
+      projects = [];
+      page = 1;
+      newProjects = [];
+      nextUrl = '';
+      getProjects();
+      searching = false;
+    }
+  };
+
+  function delayedSearchProjects() {
+    if (searching) return;
+    setTimeout(() => {
+      searchProjects();
+    }, 1000);
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event?.key === 'Enter') {
+      delayedSearchProjects();
+    }
+  }
 
   /********************************************************************************/
 
@@ -123,8 +151,16 @@
                 type="text"
                 class="w-full h-ful outline-none pl-1 text-sm bg-inherit"
                 placeholder="Búsqueda"
+                bind:value={search}
+                on:keydown={handleKeyDown}
               />
-              <img src={SearchIcon} alt="Search icon" />
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <img
+                class="cursor-pointer"
+                src={SearchIcon}
+                alt="Search icon"
+                on:click={searchProjects}
+              />
             </div>
           </div>
           <!-- svelte-ignore a11y-click-events-have-key-events -->
