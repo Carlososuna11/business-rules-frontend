@@ -1,12 +1,103 @@
 <script lang="ts">
   import Title from '../lib/components/Title.svelte';
   import ProjectCard from '../lib/components/ProjectCard.svelte';
-  import AddMore from '../assets/svg/add-round-icon.svg';
+  import Modal from '../lib/components/Modal.svelte';
+  import CreateProject from '../lib/components/CreateProject.svelte';
+  import ImportProject from '../lib/components/ImportProject.svelte';
   import SearchIcon from '../assets/svg/search-icon.svg';
+  import AddMore from '../assets/svg/add-round-icon.svg';
   import ImportProjectIcon from '../assets/svg/import-file-icon.svg';
   import CreateProjectIcon from '../assets/svg/create-file-icon.svg';
   import { goto } from '$app/navigation';
+  import { api } from '../lib/services/api.services';
+  import { onMount } from 'svelte';
+  import InfiniteScroll from '../lib/components/InfiniteScroll.svelte';
+  import type { Project } from '../lib/types';
+  import moment from 'moment';
+  import type { PageData } from './$types';
+  import { getUrlSearchParams, replaceStateWithQuery } from '../lib/utils';
+
+  /*******************************PAGINATION*********************************************/
   let loadingMore: boolean = false;
+  let page = 1;
+  let limit = 6;
+  let nextUrl = '';
+  let projects: Project[] = [];
+  let newProjects: Project[] = [];
+
+  async function getProjects() {
+    loadingMore = true;
+    try {
+      const response = await api.getProjects(page, limit);
+      nextUrl = response.links.next;
+      newProjects = response.data;
+    } catch (error) {}
+    loadingMore = false;
+  }
+
+  async function loadMore() {
+    page++;
+    await getProjects();
+  }
+
+  $: projects = [...projects, ...newProjects];
+
+  /********************************************************************************/
+
+  /***************************CREATE/IMPORT PROJECT****************************************/
+  export let data: PageData;
+
+  const actionProjectInfo = {
+    create: {
+      visible: false,
+      title: 'Proyecto Nuevo',
+      description: [
+        'Esta función te permite',
+        'crear un nuevo proyecto',
+        'para desarrollar. Puedes',
+        'especificar un nombre para',
+        'el proyecto, y otros detalles.',
+        'Una vez creado, el proyecto estará',
+        'listo para empezar a desarrollar.',
+      ].join(' '),
+      form: data.createForm,
+    },
+    import: {
+      visible: false,
+      title: 'Importar Proyecto',
+      description: [
+        'Importar Proyecto te ayuda a',
+        'recuperar un proyecto guardado',
+        'previamente. Esta herramienta te permite',
+        'cargar un proyecto desde una ubicación',
+        'específica, lo que significa que puedes',
+        'comenzar a trabajar sin perder tiempo.',
+      ].join(' '),
+      form: data.importForm,
+    },
+  };
+
+  /*********************************************************************************/
+  onMount(async () => {
+    const searchParams = getUrlSearchParams();
+    const action = searchParams.action;
+    switch (action) {
+      case 'import':
+        actionProjectInfo.import.visible = true;
+        actionProjectInfo.create.visible = false;
+        break;
+      case 'create':
+        actionProjectInfo.import.visible = false;
+        actionProjectInfo.create.visible = true;
+        break;
+
+      default:
+        actionProjectInfo.import.visible = false;
+        actionProjectInfo.create.visible = false;
+        break;
+    }
+    await getProjects();
+  });
 </script>
 
 <div class="w-full lg:w-[75%] lg:mx-auto mt-24 lg:mt-14 pb-4">
@@ -40,7 +131,10 @@
           <div
             class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer
             hover:bg-[#505868]"
-            on:click={() => goto('/import')}
+            on:click={() => {
+              actionProjectInfo.import.visible = true;
+              replaceStateWithQuery({ action: 'import' });
+            }}
           >
             <p class="hidden lg:block text-xs font-medium font-Syne">
               Importar Proyecto
@@ -52,7 +146,10 @@
           <div
             class="w-full lg:w-60 px-2 flex justify-center items-center gap-2 h-8 text-white bg-[#051127] rounded-md cursor-pointer
             hover:bg-[#505868]"
-            on:click={() => goto('/create')}
+            on:click={() => {
+              actionProjectInfo.create.visible = true;
+              replaceStateWithQuery({ action: 'create' });
+            }}
           >
             <p class="hidden lg:block text-xs font-medium font-Syne">
               Nuevo Proyecto
@@ -66,28 +163,37 @@
         <section
           class="w-full flex flex-col gap-4 bg-[#F5F5F65C] p-2 rounded-md"
         >
-          <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="w-full grid grid-cols-1 lg:grid-cols-3 gap-4">
             <!--  -->
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
+            {#each projects as project}
+              <ProjectCard
+                uuid={project.uuid}
+                title={project.name}
+                description={project.description}
+                lastUpdate={moment(project.updatedAt).format(
+                  'HH:mm A · MMM DD, YYYY'
+                )}
+                engineFile={project.engineFile}
+              />
+            {/each}
+            <InfiniteScroll
+              hasMore={newProjects.length > 0}
+              threshold={100}
+              on:loadMore={loadMore}
+              window={true}
+            />
           </div>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div
+            on:click={() => loadMore()}
             class="w-full flex items-center justify-center flex-col py-4 cursor-pointer rounded-md hover:bg-[#FFFFFF50]"
           >
             {#if loadingMore}
               <div
                 class="w-4 h-4 rounded-full border-2 border-[#021529] border-l-transparent animate-spin"
               />
-            {:else}
+            {:else if nextUrl}
               <img src={AddMore} alt="Add icon" />
-              <p class="text-sm text-[#383838]">VER MÁS</p>
             {/if}
           </div>
         </section>
@@ -95,3 +201,45 @@
     </div>
   </div>
 </div>
+
+{#if actionProjectInfo.import.visible}
+  <Modal
+    title={actionProjectInfo.import.title}
+    description={actionProjectInfo.import.description}
+    bind:showModal={actionProjectInfo.import.visible}
+    onClose={() => {
+      actionProjectInfo.import.visible = false;
+      replaceStateWithQuery({ action: null });
+    }}
+    size="md"
+  >
+    <ImportProject
+      bind:data={actionProjectInfo.import.form}
+      onClose={() => {
+        actionProjectInfo.import.visible = false;
+        replaceStateWithQuery({ action: null });
+      }}
+    />
+  </Modal>
+{/if}
+
+{#if actionProjectInfo.create.visible}
+  <Modal
+    title={actionProjectInfo.create.title}
+    description={actionProjectInfo.create.description}
+    bind:showModal={actionProjectInfo.create.visible}
+    onClose={() => {
+      actionProjectInfo.create.visible = false;
+      replaceStateWithQuery({ action: null });
+    }}
+    size="md"
+  >
+    <CreateProject
+      bind:data={actionProjectInfo.create.form}
+      onClose={() => {
+        actionProjectInfo.create.visible = false;
+        replaceStateWithQuery({ action: null });
+      }}
+    />
+  </Modal>
+{/if}

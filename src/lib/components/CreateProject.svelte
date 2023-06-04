@@ -1,33 +1,56 @@
 <script lang="ts">
+  import { fail } from '@sveltejs/kit';
+  import type { Validation } from 'sveltekit-superforms';
   import { superForm } from 'sveltekit-superforms/client';
   import ArrowRightIcon from '../../assets/svg/arrow-right-icon.svg';
+  import { api } from '$lib/services/api.services';
+  import { alertStore } from '$lib/stores';
   import { newProjectSchema } from '$lib/schemas/project';
-  import type { PageData } from './$types';
+  import type { ProjectDto } from '$lib/types/project/create.project';
+
+  export let onClose = () => {};
 
   const focus = {
     name: false,
     description: false,
   };
+  export let data: Validation<typeof newProjectSchema>;
 
-  const title: string = 'Proyecto Nuevo';
-  const description: string = [
-    'Esta función te permite',
-    'crear un nuevo proyecto',
-    'para desarrollar. Puedes',
-    'especificar un nombre para',
-    'el proyecto, y otros detalles.',
-    'Una vez creado, el proyecto estará',
-    'listo para empezar a desarrollar.',
-  ].join(' ');
+  const createProject = async (project: ProjectDto) => {
+    try {
+      const response = await api.createProject(project);
+      alertStore.set({
+        color: 'green',
+        message: 'Proyecto creado exitosamente',
+        visible: true,
+      });
+      return response;
+    } catch (error) {
+      /* empty */
+    }
+  };
 
-  export let data: PageData;
-
-  const { form, errors, enhance, constraints } = superForm(data.form, {
+  const { form, errors, enhance } = superForm(data, {
     validators: newProjectSchema,
+    SPA: true,
+    onUpdate: async ({ form }) => {
+      if (!form.valid) return fail(400, { form });
+
+      const body = form.data as ProjectDto;
+
+      const response = await createProject(body);
+
+      if (!response) return fail(400, { form });
+
+      setTimeout(async () => {
+        await onClose();
+        window.location.reload();
+      }, 600);
+    },
   });
 </script>
 
-<form method="POST" use:enhance>
+<form method="POST" action="?/create" use:enhance>
   <div class="w-full flex flex-col gap-2 lg:gap-1">
     <p class="text-sm">Nombre del proyecto</p>
     <div
@@ -66,6 +89,8 @@
         class="resize-none w-full outline-none bg-inherit text-sm pr-1"
         cols="30"
         rows="4"
+        id="description"
+        name="description"
         placeholder="Ingresa una descripción del proyecto..."
         on:blur={() => (focus.description = false)}
         on:focus={() => (focus.description = true)}
@@ -75,14 +100,22 @@
     {#if $errors.description}
       <p class="mt-1 text-sm text-red-500">{$errors.description}</p>
     {/if}
-    <div class="flex gap-2 justify-between">
+    <div class="button-row flex justify-between mt-10">
+      <button
+        type="button"
+        on:click={onClose}
+        class="w-40 text-xs flex items-center justify-around py-2 px-2 bg-[#C1C1C1] rounded-md mt-2
+              hover:bg-[#D3D3D3]"
+      >
+        Cancelar
+      </button>
       <button
         type="submit"
-        class="w-32 flex items-center justify-around px-2 py-2 text-xs text-white bg-[#051127] rounded-md mt-2
-          hover:bg-[#505868]"
+        class="w-40 flex items-center justify-around px-2 py-2 text-xs text-white bg-[#051127] rounded-md mt-2
+              hover:bg-[#505868]"
       >
         Crear Proyecto
-        <img src={ArrowRightIcon} class="w-4" alt="Arrow left icon" />
+        <img src={ArrowRightIcon} class="w-4" alt="Import project" />
       </button>
     </div>
   </div>

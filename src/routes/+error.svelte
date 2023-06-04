@@ -1,5 +1,6 @@
 <script>
   import { page } from '$app/stores';
+  import { onMount } from 'svelte';
 
   // we don't want to use <svelte:window bind:online> here, because we only care about the online
   // state when the page first loads
@@ -10,58 +11,50 @@
   <title>{$page.status}</title>
 </svelte:head>
 
-<div class="container">
-  {#if $page.status === 404}
-    <h1>Not found!</h1>
-  {:else if online}
-    <h1>Yikes!</h1>
-
-    {#if $page.error?.message}
-      <p class="error">{$page.status}: {$page.error.message}</p>
-    {/if}
-
-    <p>Please try reloading the page.</p>
-
-    <p>
-      If the error persists, please drop by <a href="https://svelte.dev/chat"
-        >Discord chatroom</a
+<div class="w-full lg:w-[75%] lg:mx-auto mt-24 lg:mt-14 pb-4">
+  <div
+    class="w-[90%] sm:w-[80%] md:w-[70%] lg:w-full relative flex flex-col gap-4 mx-auto lg:mx-0"
+  >
+    <section class="flex items-center h-full p-16">
+      <div
+        class="container flex flex-col items-center justify-center px-5 mx-auto my-8"
       >
-      and let us know, or raise an issue on
-      <a href="https://github.com/sveltejs/svelte">GitHub</a>. Thanks!
-    </p>
-  {:else}
-    <h1>It looks like you're offline</h1>
-
-    <p>Reload the page once you've found the internet.</p>
-  {/if}
+        <div class="max-w-md text-center">
+          <h2 class="mb-8 font-extrabold text-9xl text-black-600">
+            <span class="sr-only">Error</span>{$page.status}
+          </h2>
+          {#if $page.status === 404}
+            <p class="text-2xl font-semibold md:text-3xl">
+              Disculpa, pero no pudimos encontrar la página que buscabas.
+            </p>
+            <p class="mt-4 mb-8 text-black-400">
+              Revisa que la URL esté bien escrita o intenta con otra.
+            </p>
+          {:else if online}
+            <p class="text-2xl font-semibold md:text-3xl">
+              Disculpa, pero algo salió mal.
+            </p>
+            {#if $page.error?.message}
+              <p class="mt-4 mb-8 text-black-400">
+                {$page.status}: {$page.error.message}
+              </p>
+            {/if}
+          {:else}
+            <p class="text-2xl font-semibold md:text-3xl">
+              Parece que estás sin conexión.
+            </p>
+            <p class="mt-4 mb-8 text-gray-400">
+              Recarga la página una vez que hayas encontrado internet.
+            </p>
+          {/if}
+          <a
+            rel="noopener noreferrer"
+            href="/"
+            class="px-8 py-3 font-semibold rounded bg-[#051127] text-white"
+            >Página Principal</a
+          >
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
-
-<style>
-  .container {
-    padding: 4rem;
-  }
-
-  h1,
-  p {
-    margin: 0 auto;
-  }
-
-  h1 {
-    font-size: 2.8em;
-    font-weight: 300;
-    margin: 0;
-    margin-bottom: 0.5em;
-  }
-
-  p {
-    margin: 1em auto;
-  }
-
-  .error {
-    background-color: #da106e;
-    color: white;
-    padding: 12px 16px;
-    font: 600 16px/1.7 var(--sk-font);
-    border-radius: 2px;
-  }
-</style>

@@ -5,11 +5,14 @@
   export let showModal: boolean;
   export let title: string;
   export let description: string;
+  export let size: string = 'sm';
+  export let onClose = () => {};
   let isOut: boolean = false;
   let rendered: boolean = false;
 
   const closeModal = () => {
     isOut = true;
+    onClose();
     setTimeout(() => {
       isOut = false;
       showModal = false;
@@ -29,12 +32,12 @@
     };
 </script>
 
-<div class="w-full h-screen fixed left-0 top-0 bg-[#000000ce] z-50">
+<div class="w-full h-screen fixed left-0 top-0 bg-[#000000ce] z-40">
   <div class="w-full h-full flex items-center justify-center">
     <div
-      class={`w-[90%] sm:w-[450px] lg:w-[650px] h-[570px] flex items-center justify-center bg-[#FAFAFA] rounded-xl slideInDown ${
+      class={`w-[90%] sm:w-[450px] lg:w-[650px] flex items-center justify-center bg-[#FAFAFA] rounded-xl slideInDown ${
         isOut && 'slideOutUp'
-      }`}
+      } ${size === 'sm' ? 'h-[350px]' : 'sm:h-[450px] lg:h-[570px]'}`}
     >
       <div class="w-full h-[96%] overflow-y-auto scroll">
         <div
