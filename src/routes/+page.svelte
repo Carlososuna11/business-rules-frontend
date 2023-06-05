@@ -8,7 +8,6 @@
   import AddMore from '../assets/svg/add-round-icon.svg';
   import ImportProjectIcon from '../assets/svg/import-file-icon.svg';
   import CreateProjectIcon from '../assets/svg/create-file-icon.svg';
-  import { goto } from '$app/navigation';
   import { api } from '../lib/services/api.services';
   import { onMount } from 'svelte';
   import InfiniteScroll from '../lib/components/InfiniteScroll.svelte';
