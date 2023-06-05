@@ -9,6 +9,7 @@
   let showDeletePopupModal = false;
   export let title: string = 'Nombre de Proyecto';
   import { alertStore } from '../stores';
+  import { goto } from '$app/navigation';
   export let uuid: string = '671dc846-fe22-4b15-a73a-31ffe89124cb';
   export let description: string = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas`;
   export let lastUpdate: string = '18:55 PM · Jul 15, 2021';
@@ -43,7 +44,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-  class="bg-gray-100 rounded-lg sm:w-auto h-full justify-left p-2 sm:p-4 mb-2 flex flex-row cursor-pointer"
+  class="bg-gray-100 rounded-lg sm:w-auto h-[240px] justify-left p-2 sm:p-4 mb-2 flex flex-row cursor-pointer"
 >
   <div class="w-full flex flex-col justify-between h-full">
     <div class="mb-3">
@@ -68,7 +69,7 @@
       <div class="flex">
         <button
           id="edit-project"
-          on:click={() => (showDeletePopupModal = true)}
+          on:click={() => goto(`/projects/${uuid}`)}
           class="flex items-center justify-center w-10 h-10 bg-[#051127] text-white rounded-md hover:bg-[#505868]"
         >
           <img src={EditIcon} class="w-8 h-8" alt="Icono" />

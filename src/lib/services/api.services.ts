@@ -84,7 +84,7 @@ const updateProject = async (
   body: ProjectDto
 ): Promise<Project> => {
   const response = await baseService(
-    `/projects/${uuid}`,
+    `/api/projects/${uuid}`,
     'PATCH',
     {},
     {},
