@@ -1,14 +1,55 @@
 <script lang="ts">
   import Title from '$lib/components/Title.svelte';
+  import NestingAccordions from '$lib/components/NestingAccordions.svelte';
   import type { PageData } from './$types';
   import type { Project } from '$lib/types';
+  import type { JSONSchema7 } from 'json-schema';
   import UpdateProject from '$lib/components/UpdateProject.svelte';
+  import { Magnifier } from 'svelte-magnifier';
+  import { getUrlDiagram, jsonSchemaToPlantUML } from '$lib/utils';
 
   let title = 'Modificar Proyecto';
   let description =
     'Visualice la información del proyecto permitiendo modificarla';
 
   export let data: PageData;
+  let schema: JSONSchema7 = {
+    title: 'Example Schema',
+    type: 'object',
+    properties: {
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      age: {
+        description: 'Age in years',
+        type: 'integer',
+        minimum: 0,
+      },
+      hairColor: {
+        enum: ['black', 'brown', 'blue'],
+        type: 'string',
+      },
+      child: {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+          age: {
+            description: 'Age in years',
+            type: 'integer',
+            minimum: 0,
+          },
+          hairColor: {
+            enum: ['black', 'brown', 'blue'],
+            type: 'string',
+          },
+        },
+        additionalProperties: false,
+        required: ['firstName', 'lastName'],
+      },
+    },
+    additionalProperties: false,
+    required: ['firstName', 'lastName'],
+  };
 
   const project: Project = data.project;
 
@@ -119,7 +160,36 @@
                   bind:data={stepperInfo.project.form}
                 />
               </div>
-              <!-- {:else if stepperInfo.domain.active}{:else if stepperInfo.rules.active} -->
+            {:else if stepperInfo.domain.active}
+              <div class="w-full sm:w-[450px] md:w-[600px] lg:w-[900px]">
+                <NestingAccordions {schema} />
+                <br />
+                <div class="w-full flex justify-center">
+                  <a
+                    class="bg-[#051127] text-white rounded-md px-4 py-2"
+                    href={getUrlDiagram(jsonSchemaToPlantUML(schema))}
+                    target="_blank"
+                    download="diagrama.png"
+                    rel="noopener noreferrer"
+                  >
+                    Descargar Diagrama
+                  </a>
+                </div>
+                <div class="p-2 text-center rounded-lg overflow-hidden mx-auto">
+                  <Magnifier
+                    className="p-2 object-cover w-full md:object-scale-down"
+                    src={getUrlDiagram(jsonSchemaToPlantUML(schema))}
+                    zoomImgSrc={getUrlDiagram(jsonSchemaToPlantUML(schema))}
+                    alt="Diagrama de Dominio"
+                    zoomFactor={0.5}
+                    mgWidth={500}
+                    mgHeight={500}
+                    mgBorderWidth={0}
+                    mgShape="square"
+                  />
+                </div>
+              </div>
+              <!--{:else if stepperInfo.rules.active} -->
             {/if}
           </div>
         </div>
