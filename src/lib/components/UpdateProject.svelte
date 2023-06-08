@@ -67,7 +67,12 @@
 
 <form method="POST" action="?/create" use:enhance>
   <div class="w-full flex flex-col gap-2 lg:gap-1">
-    <p class="text-sm">Nombre del proyecto</p>
+    <label
+      class="block mt-2 uppercase tracking-wide text-gray-700 text-xs font-bold mb-1"
+      for="name"
+    >
+      Nombre del Proyecto
+    </label>
     <div
       class={`w-full h-9 flex items-center bg-inherit rounded-md px-2 ${
         focus.name
@@ -92,7 +97,12 @@
     {/if}
   </div>
   <div class="flex flex-col gap-2 bg-inherit lg:gap-1">
-    <p class="text-sm">Descripción del Proyecto</p>
+    <label
+      class="block mt-2 uppercase tracking-wide text-gray-700 text-xs font-bold mb-1"
+      for="description"
+    >
+      Descripción del Proyecto
+    </label>
     <div
       class={`w-full flex items-center bg-inherit rounded-md px-2 ${
         focus.description

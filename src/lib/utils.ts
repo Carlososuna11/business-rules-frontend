@@ -31,7 +31,7 @@ export const getUrlSearchParams = (): SearchParams => {
 };
 
 type JsonSchema = {
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 function jsonToPlantUML(
@@ -84,8 +84,10 @@ function jsonToPlantUML(
   return classUML + relationships;
 }
 
-export function jsonSchemaToPlantUML(jsonSchema: JsonSchema) {
-  return '@startuml\n' + jsonToPlantUML(jsonSchema, 'root') + '@enduml';
+export function jsonSchemaToPlantUML(jsonSchema: JSONSchema7) {
+  return (
+    '@startuml\n' + jsonToPlantUML(jsonSchema as JsonSchema, 'root') + '@enduml'
+  );
 }
 
 export function encodeDiagram(diagram: string) {

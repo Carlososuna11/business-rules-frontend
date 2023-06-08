@@ -9,16 +9,19 @@
   export let required: boolean | undefined = undefined;
 </script>
 
-<Accordion class="border-b-0 bg-[#051127]">
+<Accordion
+  class="bg-[#051127]"
+  activeClasses="bg-gray-800 text-white focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800"
+  inactiveClasses="text-gray-400 bg-gray-800"
+  defaultClass="text-gray-400"
+>
   <!-- String Element -->
   {#if schema.type === 'string' || schema.type === 'number' || schema.type === 'integer' || schema.type === 'boolean'}
     <AccordionItem>
       <span slot="header"
         ><p>
           <span class="font-bold">{title || schema.title || schema.type}</span
-          ><span class="font-bold"
-            >{schema.required || required ? '*' : ''}</span
-          >{' - '}<code
+          ><span class="font-bold">{required ? '*' : ''}</span>{' - '}<code
             class="text-sm sm:text-base inline-flex text-left items-center space-x-4 bg-gray-800 text-white rounded-lg p-1"
           >
             {schema.type}
@@ -28,7 +31,7 @@
       <p class="mb-2 text-gray-500 dark:text-gray-400">
         <span class="font-bold">{schema.title || ''}</span>
       </p>
-      {#if schema.required || required}
+      {#if required}
         <p class="mb-2 text-gray-500 dark:text-gray-400">
           <span class="font-bold">Requerido</span>
         </p>
@@ -146,9 +149,7 @@
       <span slot="header"
         ><p>
           <span class="font-bold">{title || schema.title || schema.type}</span
-          ><span class="font-bold"
-            >{schema.required || required ? '*' : ''}</span
-          >{' - '}<code
+          ><span class="font-bold">{required ? '*' : ''}</span>{' - '}<code
             class="text-sm sm:text-base inline-flex text-left items-center space-x-4 bg-gray-800 text-white rounded-lg p-1"
           >
             {schema.type}
@@ -158,7 +159,7 @@
       <p class="mb-2 text-gray-500 dark:text-gray-400">
         <span class="font-bold">{schema.title || ''}</span>
       </p>
-      {#if (schema.required && typeof schema.required === 'boolean') || required}
+      {#if required}
         <p class="mb-2 text-gray-500 dark:text-gray-400">
           <span class="font-bold">Requerido</span>
         </p>
@@ -244,7 +245,7 @@
         </p>
       {/if}
       <!-- Recorrer cada elemento y llamar al componente de nuevo -->
-      {#if schema.properties}
+      {#if schema.properties && typeof schema.properties === 'object'}
         {#each Object.keys(schema.properties) as key}
           <!--  -->
           <svelte:self
@@ -263,9 +264,7 @@
       <span slot="header"
         ><p>
           <span class="font-bold">{title || schema.title || schema.type}</span
-          ><span class="font-bold"
-            >{schema.required || required ? '*' : ''}</span
-          >{' - '}<code
+          ><span class="font-bold">{required ? '*' : ''}</span>{' - '}<code
             class="text-sm sm:text-base inline-flex text-left items-center space-x-4 bg-gray-800 text-white rounded-lg p-1"
           >
             {schema.type}
@@ -275,7 +274,7 @@
       <p class="mb-2 text-gray-500 dark:text-gray-400">
         <span class="font-bold">{schema.title || ''}</span>
       </p>
-      {#if (schema.required && typeof schema.required === 'boolean') || required}
+      {#if required}
         <p class="mb-2 text-gray-500 dark:text-gray-400">
           <span class="font-bold">Requerido</span>
         </p>

@@ -1,4 +1,5 @@
 export * from './project';
+import type { JSONSchema7 } from 'json-schema';
 
 export type alertColor =
   | 'form'
@@ -29,4 +30,27 @@ export type Alert = {
 export type ErrorResponse = {
   statusCode: number;
   message: string;
+};
+
+/* Object Domain */
+
+export type fieldTypes =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'object'
+  | 'array'
+  | 'null';
+
+export type baseValueField = {
+  objectName?: string;
+  displayName?: string;
+  type: fieldTypes;
+  description?: string;
+};
+
+export type FieldSchema = {
+  objectName: string;
+  required?: boolean;
+  schema: JSONSchema7;
 };
