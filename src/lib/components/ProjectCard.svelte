@@ -76,7 +76,8 @@
         </button>
       </div>
       <Tooltip
-        class="bg-[#051127] text-white pr-1 pl-1"
+        arrow={false}
+        class="bg-[#051127] text-white pr-1 pl-1 rounded-lg"
         triggeredBy="[id^='edit-project']"
         placement="left"
       >
@@ -94,6 +95,7 @@
         </button>
       </div>
       <Tooltip
+        arrow={false}
         class="bg-[#051127] text-white pr-1 pl-1"
         triggeredBy="[id^='delete-project']"
         placement="left"
@@ -114,6 +116,7 @@
           </a>
         </div>
         <Tooltip
+          arrow={false}
           class="bg-[#051127] text-white pr-1 pl-1"
           triggeredBy="[id^='export-engine']"
           placement="left"
@@ -132,6 +135,7 @@
           </button>
         </div>
         <Tooltip
+          arrow={false}
           class="bg-[#051127] text-white pr-1 pl-1"
           triggeredBy="[id^='export-diagram']"
           placement="left"

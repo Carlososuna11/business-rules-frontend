@@ -10,9 +10,11 @@ export const load = async ({ params }) => {
   });
 
   let project = null;
+  let schema = null;
 
   try {
     project = await api.getProject(params.slug);
+    schema = await api.getContext(params.slug);
   } catch (err) {
     alertStore.set({ color: 'red', message: String(err), visible: false });
     throw error(404, 'Not found');
@@ -22,5 +24,14 @@ export const load = async ({ params }) => {
     throw error(404, 'Not found');
   }
 
-  return { project, updateForm };
+  if (!schema || Object.keys(schema).length < 1) {
+    schema = {
+      title: project.name,
+      type: 'object',
+      properties: {},
+      required: [],
+    };
+  }
+
+  return { project, schema, updateForm };
 };

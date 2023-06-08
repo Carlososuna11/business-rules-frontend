@@ -5,9 +5,11 @@ import type {
   DiagramDto,
   ImportProjectDto,
   ErrorResponse,
+  SetContextDto,
 } from '../types';
 import axios, { AxiosError } from 'axios';
 import { alertStore } from '../stores';
+import type { JSONSchema7 } from 'json-schema';
 
 const BACKEND_URL = env.PUBLIC_BACKEND_BASE_URL;
 
@@ -114,6 +116,25 @@ const importProject = async (body: ImportProjectDto): Promise<Project> => {
   return await response.data;
 };
 
+const getContext = async (uuid: string): Promise<JSONSchema7> => {
+  const response = await baseService(`/api/projects/${uuid}/context`, 'GET');
+  return await response.data;
+};
+
+const setContext = async (
+  uuid: string,
+  body: SetContextDto
+): Promise<JSONSchema7> => {
+  const response = await baseService(
+    `/api/projects/${uuid}/context`,
+    'POST',
+    {},
+    {},
+    body
+  );
+  return await response.data;
+};
+
 export const api = {
   getProjects,
   getProject,
@@ -122,4 +143,6 @@ export const api = {
   deleteProject,
   getDiagram,
   importProject,
+  getContext,
+  setContext,
 };
