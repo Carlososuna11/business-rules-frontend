@@ -1,6 +1,7 @@
 <script lang="ts">
   import Title from '$lib/components/Title.svelte';
   import NestingAccordions from '$lib/components/NestingAccordions.svelte';
+  import EngineContainer from '$lib/components/engine/EngineContainer.svelte';
   import type { PageData } from './$types';
   import type { Project, FieldSchema, SetContextDto } from '$lib/types';
   import type { JSONSchema7 } from 'json-schema';
@@ -326,7 +327,8 @@
                   {/if}
                 </div>
               </div>
-              <!--{:else if stepperInfo.rules.active} -->
+            {:else if stepperInfo.rules.active}
+              <EngineContainer />
             {/if}
           </div>
         </div>

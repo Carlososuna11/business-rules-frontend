@@ -54,3 +54,18 @@ export type FieldSchema = {
   required?: boolean;
   schema: JSONSchema7;
 };
+
+export type Data = {
+  [key: string]: unknown | Data;
+};
+
+export type RuleObject = {
+  name: string;
+  condition: Data;
+  description?: string;
+  final?: boolean;
+  priority?: number;
+  activationGroup?: string;
+  preActions?: Data[];
+  postActions?: Data[];
+};
