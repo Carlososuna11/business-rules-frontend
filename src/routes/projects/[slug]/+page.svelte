@@ -19,7 +19,10 @@
   export let data: PageData;
   let initialSchema: JSONSchema7 = JSON.parse(JSON.stringify(data.schema));
   let schema: JSONSchema7 = JSON.parse(JSON.stringify(data.schema));
+  let initialEngine = JSON.parse(JSON.stringify(data.engine));
+  let engine = JSON.parse(JSON.stringify(data.engine));
   let fields: FieldSchema[] = [];
+  const commands = data.commands;
   const project: Project = data.project;
 
   const stepperInfo = {
@@ -328,7 +331,12 @@
                 </div>
               </div>
             {:else if stepperInfo.rules.active}
-              <EngineContainer />
+              <EngineContainer
+                {commands}
+                bind:engine
+                {initialEngine}
+                uuid={project.uuid}
+              />
             {/if}
           </div>
         </div>

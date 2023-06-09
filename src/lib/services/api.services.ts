@@ -6,6 +6,8 @@ import type {
   ImportProjectDto,
   ErrorResponse,
   SetContextDto,
+  CommandInfo,
+  Engine,
 } from '../types';
 import axios, { AxiosError } from 'axios';
 import { alertStore } from '../stores';
@@ -135,6 +137,27 @@ const setContext = async (
   return await response.data;
 };
 
+const getCommands = async (): Promise<CommandInfo[]> => {
+  const response = await baseService(`/api/engine/commands`, 'GET');
+  return await response.data;
+};
+
+const getEngine = async (uuid: string): Promise<Engine> => {
+  const response = await baseService(`/api/projects/${uuid}/engine`, 'GET');
+  return await response.data;
+};
+
+const setEngine = async (uuid: string, body: Engine): Promise<Engine> => {
+  const response = await baseService(
+    `/api/projects/${uuid}/engine`,
+    'POST',
+    {},
+    {},
+    body
+  );
+  return await response.data;
+};
+
 export const api = {
   getProjects,
   getProject,
@@ -145,4 +168,7 @@ export const api = {
   importProject,
   getContext,
   setContext,
+  getCommands,
+  getEngine,
+  setEngine,
 };

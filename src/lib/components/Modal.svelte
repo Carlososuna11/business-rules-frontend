@@ -13,6 +13,7 @@
   const closeModal = () => {
     isOut = true;
     onClose();
+    document.body.style.overflow = 'auto';
     setTimeout(() => {
       isOut = false;
       showModal = false;
@@ -23,13 +24,9 @@
     rendered = true;
   });
 
-  $: showModal,
-    () => {
-      if (!rendered) return;
-      showModal
-        ? (document.body.style.overflow = 'hidden')
-        : (document.body.style.overflow = 'auto');
-    };
+  $: showModal
+    ? (document.body.style.overflow = 'hidden')
+    : (document.body.style.overflow = 'auto');
 </script>
 
 <div class="w-full h-screen fixed left-0 top-0 bg-[#000000ce] z-40">
@@ -37,7 +34,13 @@
     <div
       class={`w-[90%] sm:w-[450px] lg:w-[650px] flex items-center justify-center bg-[#FAFAFA] rounded-xl slideInDown ${
         isOut && 'slideOutUp'
-      } ${size === 'sm' ? 'h-[350px]' : 'sm:h-[450px] lg:h-[570px]'}`}
+      } ${
+        size === 'sm'
+          ? 'h-[350px]'
+          : size === 'md'
+          ? 'sm:h-[450px] lg:h-[570px]'
+          : 'sm:h-[550px] lg:h-[670px]'
+      }`}
     >
       <div class="w-full h-[96%] overflow-y-auto scroll">
         <div

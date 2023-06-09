@@ -1,5 +1,11 @@
 <script lang="ts">
   import RuleForm from './RuleForm.svelte';
+  import type { CommandInfo, Engine } from '../../types';
+
+  export let commands: CommandInfo[] = [];
+  export let engine: Engine;
+  export let initialEngine: Engine;
+  export let uuid: string;
 </script>
 
 <div class="w-full">
@@ -34,6 +40,11 @@
   </div>
   <div class="my-10" />
   <div class="w-fill md:w-[500px] lg:w-[800px] xl:w-[950px]">
-    <RuleForm />
+    <RuleForm
+      {commands}
+      bind:rules={engine.rules}
+      initialRules={initialEngine.rules}
+      {uuid}
+    />
   </div>
 </div>
