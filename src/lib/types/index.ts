@@ -67,8 +67,8 @@ export type RuleObject = {
   final?: boolean;
   priority?: number;
   activationGroup?: string;
-  preActions?: Data[];
-  postActions?: Data[];
+  preActions: Data[];
+  postActions: Data[];
 };
 
 export type Engine = {

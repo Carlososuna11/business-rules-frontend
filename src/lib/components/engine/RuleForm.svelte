@@ -265,6 +265,7 @@
                       <button
                         type="button"
                         on:click={() =>
+                          // @ts-ignore
                           (rules[index].preActions = rules[
                             index
                           ].preActions.filter((_, i) => i !== indexx))}
@@ -348,6 +349,7 @@
                       <button
                         type="button"
                         on:click={() =>
+                          // @ts-ignore
                           (rules[index].preActions = rules[
                             index
                           ].preActions.filter((_, i) => i !== indexx))}
