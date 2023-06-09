@@ -1,4 +1,5 @@
 export * from './project';
+export * from './command';
 import type { JSONSchema7 } from 'json-schema';
 
 export type alertColor =
@@ -53,4 +54,25 @@ export type FieldSchema = {
   objectName: string;
   required?: boolean;
   schema: JSONSchema7;
+};
+
+export type Data = {
+  [key: string]: unknown | Data;
+};
+
+export type RuleObject = {
+  name: string;
+  condition: Data;
+  description?: string;
+  final?: boolean;
+  priority?: number;
+  activationGroup?: string;
+  preActions: Data[];
+  postActions: Data[];
+};
+
+export type Engine = {
+  name: string;
+  description?: string;
+  rules: RuleObject[];
 };
