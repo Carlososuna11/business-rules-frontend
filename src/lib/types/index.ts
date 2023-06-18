@@ -76,3 +76,8 @@ export type Engine = {
   description?: string;
   rules: RuleObject[];
 };
+
+export type DomainContext = {
+  data: JSONSchema7;
+  file: string;
+};

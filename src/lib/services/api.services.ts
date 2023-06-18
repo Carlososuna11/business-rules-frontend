@@ -158,6 +158,15 @@ const setEngine = async (uuid: string, body: Engine): Promise<Engine> => {
   return await response.data;
 };
 
+const getDomains = async (page = 1, limit = 10) => {
+  const params = {
+    page,
+    limit,
+  };
+  const response = await baseService(`/api/contexts`, 'GET', {}, params);
+  return response.data;
+};
+
 export const api = {
   getProjects,
   getProject,
@@ -171,4 +180,5 @@ export const api = {
   getCommands,
   getEngine,
   setEngine,
+  getDomains,
 };

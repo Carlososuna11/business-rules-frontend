@@ -7,6 +7,7 @@
   import type { JSONSchema7 } from 'json-schema';
   import { api } from '$lib/services/api.services';
   import { alertStore } from '$lib/stores';
+  import ListDomain from './ListDomain.svelte';
 
   type Section = {
     domain: boolean;
@@ -212,6 +213,8 @@
           />
         </div>
       </div>
+    {:else if section.staticDomains === true}
+      <ListDomain bind:actualSchema={schema} bind:extraFields bind:dataFields />
     {/if}
   </div>
 </div>
