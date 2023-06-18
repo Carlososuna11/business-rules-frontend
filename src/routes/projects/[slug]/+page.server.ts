@@ -39,8 +39,44 @@ export const load = async ({ params }) => {
     schema = {
       title: project.name,
       type: 'object',
-      properties: {},
-      required: [],
+      properties: {
+        data: {
+          type: 'object',
+          title: 'Estructura del Dominio',
+          properties: {},
+          required: [],
+        },
+        extra: {
+          type: 'object',
+          title: 'Atributos Calculados',
+          properties: {},
+          required: [],
+        },
+      },
+      required: ['data'],
+    };
+  }
+
+  // When schema has properties but the first level is not { data: {}, extra: {} }
+  if (schema.properties && !schema.properties.data) {
+    schema = {
+      title: project.name,
+      type: 'object',
+      properties: {
+        data: {
+          type: 'object',
+          title: 'Estructura del Dominio',
+          properties: schema.properties,
+          required: schema.required,
+        },
+        extra: {
+          type: 'object',
+          title: 'Atributos Calculados',
+          properties: {},
+          required: [],
+        },
+      },
+      required: ['data'],
     };
   }
 
@@ -56,5 +92,5 @@ export const load = async ({ params }) => {
     };
   }
 
-  return { project, schema, updateForm, commands, engine };
+  return { project, schema: schema, updateForm, commands, engine };
 };

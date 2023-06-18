@@ -29,7 +29,7 @@
 
 {#if alertContent?.visible}
   <div
-    class={'absolute z-50 sm:w-[100%] md:w-[50%] sm:top-18 md:top-16 right-0 py-3 pl-4 pr-10 leading-normal rounded-lg ' +
+    class={'fixed z-50 sm:w-[100%] md:w-[50%] sm:top-18 md:top-16 right-0 py-3 pl-4 pr-10 leading-normal rounded-lg ' +
       (alertContent.color === 'green'
         ? 'text-emerald-700 bg-emerald-100'
         : alertContent.color === 'red'
