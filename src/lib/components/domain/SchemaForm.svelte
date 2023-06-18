@@ -7,7 +7,7 @@
     JSONSchema7Definition,
   } from 'json-schema';
 
-  import type { FieldSchema } from '../types';
+  import type { FieldSchema } from '../../types';
 
   export let schema: JSONSchema7 = {
     type: 'object',
@@ -44,10 +44,12 @@
         : [...fields, field];
 
     fieldCount++;
+    updateFields();
   }
 
   function removeField(index: number) {
     fields = fields.filter((_, i) => i !== index);
+    updateFields();
   }
 
   function updateField(
@@ -83,10 +85,11 @@
     return new Set(names).size !== names.length;
   }
 
-  $: fields.length > -1 && updateFields();
+  $: fields.length > 0 && updateFields();
   $: withError = hasRepeatedNames();
+  $: fields.length === 0 && updateSchemaFields();
 
-  onMount(() => {
+  function updateSchemaFields() {
     if (mode == 'object' && schema.properties) {
       fields = Object.entries(schema.properties).map(([key, value]) => {
         if (typeof value === 'boolean') {
@@ -110,6 +113,10 @@
         },
       ];
     }
+  }
+
+  onMount(() => {
+    updateSchemaFields();
   });
 </script>
 

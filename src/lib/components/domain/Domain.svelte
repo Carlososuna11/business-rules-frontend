@@ -1,9 +1,9 @@
 <script lang="ts">
   import { Magnifier } from 'svelte-magnifier';
-  import NestingAccordions from '$lib/components/NestingAccordions.svelte';
+  import NestingAccordions from '$lib/components/domain/NestingAccordions.svelte';
   import { getUrlDiagram, jsonSchemaToPlantUML } from '$lib/utils';
   import type { FieldSchema, SetContextDto } from '$lib/types';
-  import SchemaForm from '$lib/components/SchemaForm.svelte';
+  import SchemaForm from '$lib/components/domain/SchemaForm.svelte';
   import type { JSONSchema7 } from 'json-schema';
   import { api } from '$lib/services/api.services';
   import { alertStore } from '$lib/stores';
@@ -17,18 +17,15 @@
   let dataFields: FieldSchema[] = [];
   let extraFields: FieldSchema[] = [];
   export let schema: JSONSchema7;
-  let extraSchema: JSONSchema7;
-  let dataSchema: JSONSchema7;
+  export let dataSchema: JSONSchema7;
+  export let extraSchema: JSONSchema7;
   export let initialSchema: JSONSchema7;
-  export const uuid: string = '';
+  export let uuid: string;
   export let section: Section = {
     domain: true,
     visualize: false,
     staticDomains: false,
   };
-
-  checkSchemas();
-
   /* API */
   const setContext = async (uuid: string, context: SetContextDto) => {
     try {
@@ -45,39 +42,6 @@
       /* empty */
     }
   };
-
-  $: dataSchema &&
-    (schema = {
-      ...schema,
-      properties: {
-        ...schema.properties,
-        data: dataSchema,
-      },
-    });
-
-  $: extraSchema &&
-    (schema = {
-      ...schema,
-      properties: {
-        ...schema.properties,
-        extra: extraSchema,
-      },
-    });
-
-  function checkSchemas() {
-    dataSchema = (schema.properties?.data || {
-      type: 'object',
-      title: 'Estructura del Dominio',
-      properties: {},
-      required: [],
-    }) as JSONSchema7;
-    extraSchema = (schema.properties?.extra || {
-      type: 'object',
-      title: 'Atributos Calculados',
-      properties: {},
-      required: [],
-    }) as JSONSchema7;
-  }
 </script>
 
 <div class="w-full">
@@ -176,7 +140,6 @@
               class="bg-[#C1C1C1] text-black rounded-md px-4 py-2 mr-3"
               on:click={() => {
                 schema = JSON.parse(JSON.stringify(initialSchema));
-                checkSchemas();
                 dataFields = [];
                 extraFields = [];
               }}

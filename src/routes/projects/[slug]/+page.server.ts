@@ -92,5 +92,5 @@ export const load = async ({ params }) => {
     };
   }
 
-  return { project, schema, updateForm, commands, engine };
+  return { project, schema: schema, updateForm, commands, engine };
 };

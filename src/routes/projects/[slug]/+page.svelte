@@ -14,11 +14,19 @@
   export let data: PageData;
   let initialSchema: JSONSchema7 = JSON.parse(JSON.stringify(data.schema));
   let schema: JSONSchema7 = JSON.parse(JSON.stringify(data.schema));
+  let extraSchema: JSONSchema7 = schema.properties?.extra as JSONSchema7;
+  let dataSchema: JSONSchema7 = schema.properties?.data as JSONSchema7;
   let initialEngine = JSON.parse(JSON.stringify(data.engine));
   let engine = JSON.parse(JSON.stringify(data.engine));
 
   const commands = data.commands;
   const project: Project = data.project;
+
+  $: schema.properties?.data &&
+    (dataSchema = schema.properties?.data as JSONSchema7);
+
+  $: schema.properties?.extra &&
+    (extraSchema = schema.properties?.extra as JSONSchema7);
 
   const stepperInfo = {
     project: {
@@ -139,6 +147,8 @@
             {:else if stepperInfo.domain.active}
               <Domain
                 bind:schema
+                bind:extraSchema
+                bind:dataSchema
                 bind:initialSchema
                 bind:section={stepperInfo.domain.section}
                 uuid={project.uuid}

@@ -1,6 +1,6 @@
 import { encode } from 'plantuml-encoder';
 import type { JSONSchema7 } from 'json-schema';
-
+import type { Schema } from './types';
 export const replaceStateWithQuery = (
   values: Record<string, string | undefined | null>
 ) => {
@@ -84,7 +84,7 @@ function jsonToPlantUML(
   return classUML + relationships;
 }
 
-export function jsonSchemaToPlantUML(jsonSchema: JSONSchema7) {
+export function jsonSchemaToPlantUML(jsonSchema: JSONSchema7 | Schema) {
   return (
     '@startuml\n' + jsonToPlantUML(jsonSchema as JsonSchema, 'root') + '@enduml'
   );
