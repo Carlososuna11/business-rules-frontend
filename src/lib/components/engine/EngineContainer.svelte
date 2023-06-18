@@ -2,10 +2,19 @@
   import RuleForm from './RuleForm.svelte';
   import type { CommandInfo, Engine } from '../../types';
 
+  type Section = {
+    modify: boolean;
+    visualize: boolean;
+  };
+
   export let commands: CommandInfo[] = [];
   export let engine: Engine;
   export let initialEngine: Engine;
   export let uuid: string;
+  export let section: Section = {
+    modify: true,
+    visualize: false,
+  };
 </script>
 
 <div class="w-full">
@@ -15,7 +24,11 @@
   >
     <button
       type="button"
-      class={true
+      on:click={() => {
+        section.modify = true;
+        section.visualize = false;
+      }}
+      class={section.modify
         ? 'px-5 py-1.5 text-xs font-medium bg-gray-300 text-gray-900 rounded-lg'
         : 'px-5 py-1.5 text-xs font-medium text-white hover:bg-black rounded-lg'}
     >
@@ -23,19 +36,15 @@
     </button>
     <button
       type="button"
-      class={false
+      on:click={() => {
+        section.modify = false;
+        section.visualize = true;
+      }}
+      class={section.visualize
         ? 'px-5 py-1.5 text-xs font-medium bg-gray-300 text-gray-900 rounded-lg'
         : 'px-5 py-1.5 text-xs font-medium text-white hover:bg-black rounded-lg'}
     >
       Visualizar
-    </button>
-    <button
-      type="button"
-      class={false
-        ? 'px-5 py-1.5 text-xs font-medium bg-gray-300 text-gray-900 rounded-lg'
-        : 'px-5 py-1.5 text-xs font-medium text-white hover:bg-black rounded-lg'}
-    >
-      Documentación
     </button>
   </div>
   <div class="my-10" />

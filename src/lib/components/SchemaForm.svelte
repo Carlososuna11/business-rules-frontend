@@ -83,7 +83,7 @@
     return new Set(names).size !== names.length;
   }
 
-  $: fields.length && updateFields();
+  $: fields.length > -1 && updateFields();
   $: withError = hasRepeatedNames();
 
   onMount(() => {
@@ -291,7 +291,7 @@
                 />
               {/if}
             </div>
-            <hr class="h-[.5px] my-2 border-0 bg-gray-700 mx-[20%]" />
+            <hr class="h-[.5px] my-2 border-0 bg-gray-700 mx-[100%]" />
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <span
               on:click={() => removeField(index)}
