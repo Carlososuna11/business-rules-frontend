@@ -1,6 +1,7 @@
 import { encode } from 'plantuml-encoder';
 import type { JSONSchema7 } from 'json-schema';
-import type { Schema } from './types';
+import type { Schema, Property, CommandTypesOptions, Engine } from './types';
+import { api } from './services/api.services';
 export const replaceStateWithQuery = (
   values: Record<string, string | undefined | null>
 ) => {
@@ -96,4 +97,43 @@ export function encodeDiagram(diagram: string) {
 
 export function getUrlDiagram(diagram: string) {
   return `${'https://www.plantuml.com/plantuml/png/'}${encodeDiagram(diagram)}`;
+}
+
+export function extractProperties(
+  schema: JSONSchema7,
+  prefixName = '',
+  prefix = ''
+): Property[] {
+  const properties: Property[] = [];
+
+  for (const key in schema.properties) {
+    const property = schema.properties[key] as JSONSchema7;
+    const title = property.title || key;
+    const propertyName = prefixName ? `${prefixName} ➞ ${title}` : title;
+    const propertyValue = prefix ? `${prefix}.${key}` : key;
+
+    if (property.type === 'object') {
+      properties.push(
+        ...extractProperties(property, propertyName, propertyValue)
+      );
+    } else {
+      properties.push({
+        name: propertyName,
+        value: propertyValue,
+        type: property.type as CommandTypesOptions,
+      });
+    }
+  }
+
+  return properties;
+}
+
+export async function engineToDiagram(engine: Engine) {
+  try {
+    const response = await api.engineToDiagram(engine);
+    return getUrlDiagram(response.diagram);
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
 }

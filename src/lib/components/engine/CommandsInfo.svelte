@@ -6,6 +6,7 @@
     CateroryInfo,
     Data,
     CommandType,
+    Property,
   } from '../../types';
   import SearchIcon from '../../../assets/svg/search-icon.svg';
   import { Accordion, AccordionItem } from 'flowbite-svelte';
@@ -14,8 +15,10 @@
   export let commands: CommandInfo[] = [];
   export let data: Data | number | string | Array<number | string> | undefined;
   export let deep: number = 0;
+  export let isContextDropdown: boolean = false;
   export let acceptedTypes: CommandTypesOptions[] = ['unknown'];
   export let canDelete: boolean = true;
+  export let properties: Property[] = [];
   export let onDelete: () => void = () => {};
 
   let dataCommand: unknown[] = [];
@@ -184,6 +187,7 @@
           {#each dataCommand as value, index}
             <svelte:self
               {commands}
+              bind:properties
               bind:data={dataCommand[index]}
               onDelete={() => {
                 // remove value from data
@@ -233,10 +237,18 @@
                 <p />
                 <svelte:self
                   {commands}
+                  bind:properties
                   bind:data={dataCommand[index]}
                   deep={deep + 1}
-                  acceptedTypes={argument.acceptedTypes}
+                  acceptedTypes={commandSelected.type === 'context' &&
+                  index === 0
+                    ? acceptedTypes
+                    : argument.acceptedTypes}
                   canDelete={false}
+                  isContextDropdown={commandSelected.type === 'context' &&
+                  index === 0
+                    ? true
+                    : false}
                   onDelete={() => {
                     // no remove, just set undefined
                     dataCommand[index] = {};
@@ -260,7 +272,7 @@
         </button>
       </AccordionItem>
     </Accordion>
-  {:else if modalInfo.value}
+  {:else if modalInfo.value && !isContextDropdown}
     <ValueField
       bind:value={data}
       onDelete={() => {
@@ -273,6 +285,74 @@
       )}
       type={getType(data) ?? 'unknown'}
     />
+  {:else if modalInfo.value && isContextDropdown}
+    <Accordion
+      class="bg-[#051127] my-2 group-first:rounded-b-xl"
+      activeClasses="bg-gray-800 text-white focus:ring-4 focus:ring-gray-800 group-first:rounded-b-xl"
+      inactiveClasses="text-gray-400 bg-gray-800 group-first:rounded-b-xl"
+      defaultClass="text-gray-400 group-first:rounded-b-xl"
+    >
+      <AccordionItem id={`condition-${deep}`}>
+        <span slot="header">
+          <p>
+            <span class="font-bold">Clave</span>
+          </p>
+        </span>
+        <div class="w-full flex flex-col">
+          <div class="flex flex-wrap mb-2">
+            <div class="w-full px-3">
+              <label
+                class="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                for={`value-type`}
+              >
+                Atributo
+              </label>
+              <div class="relative">
+                <select
+                  class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id={`value-type`}
+                  bind:value={data}
+                >
+                  {#each properties as property, index}
+                    {#if acceptedTypes.includes(property.type) || acceptedTypes.length == 0 || acceptedTypes.includes('unknown')}
+                      <option
+                        value={property.value}
+                        on:click={() => {
+                          data = property.value;
+                        }}>{property.name}</option
+                      >
+                    {/if}
+                  {/each}
+                </select>
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+                >
+                  <svg
+                    class="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    ><path
+                      d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                    /></svg
+                  >
+                </div>
+              </div>
+              <button
+                type="button"
+                class="my-1 bg-red-600 text-white rounded-md px-2 py-1 mr-2"
+                on:click={() => {
+                  commandSelected = undefined;
+                  dataCommand = [];
+                  data = {};
+                }}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </AccordionItem>
+    </Accordion>
   {/if}
 </div>
 
@@ -364,8 +444,11 @@
                             Array.isArray(commandSelected.arguments)
                           ) {
                             dataCommand = commandSelected.arguments.map(
-                              () => {}
+                              () => ({})
                             );
+                            if (commandSelected.type === 'context') {
+                              dataCommand[0] = '';
+                            }
                           }
                           onSelectedCommand();
                           modalInfo.command = false;

@@ -156,6 +156,7 @@
             {:else if stepperInfo.rules.active}
               <EngineContainer
                 {commands}
+                bind:schema
                 bind:engine
                 {initialEngine}
                 uuid={project.uuid}

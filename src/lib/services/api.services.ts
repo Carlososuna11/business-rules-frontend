@@ -167,6 +167,17 @@ const getDomains = async (page = 1, limit = 10) => {
   return response.data;
 };
 
+const engineToDiagram = async (engine: Engine): Promise<DiagramDto> => {
+  const response = await baseService(
+    `/api/engine/to-diagram`,
+    'POST',
+    {},
+    {},
+    engine
+  );
+  return await response.data;
+};
+
 export const api = {
   getProjects,
   getProject,
@@ -181,4 +192,5 @@ export const api = {
   getEngine,
   setEngine,
   getDomains,
+  engineToDiagram,
 };
