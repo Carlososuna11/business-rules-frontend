@@ -1,6 +1,7 @@
 export * from './project';
 export * from './command';
 import type { JSONSchema7 } from 'json-schema';
+import type { CommandTypesOptions } from './command';
 
 export type alertColor =
   | 'form'
@@ -80,4 +81,10 @@ export type Engine = {
 export type DomainContext = {
   data: JSONSchema7;
   file: string;
+};
+
+export type Property = {
+  value: string;
+  name: string;
+  type: CommandTypesOptions;
 };

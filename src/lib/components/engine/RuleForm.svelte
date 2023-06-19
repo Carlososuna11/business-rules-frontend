@@ -4,11 +4,12 @@
   import { api } from '$lib/services/api.services';
   import { alertStore } from '$lib/stores';
 
-  import type { RuleObject, CommandInfo } from '$lib/types';
+  import type { RuleObject, CommandInfo, Property } from '$lib/types';
 
   export let uuid: string;
   export let rules: RuleObject[] = [];
   export let initialRules: RuleObject[] = [];
+  export let properties: Property[] = [];
   let error: boolean = false;
 
   export let commands: CommandInfo[] = [];
@@ -257,6 +258,7 @@
                 {:else if Array.isArray(rules[index].preActions)}
                   {#each rules[index].preActions || [] as value, indexx}
                     <CommandsInfo
+                      bind:properties
                       {commands}
                       bind:data={rules[index].preActions[indexx]}
                       deep={0}
@@ -312,6 +314,7 @@
               <div class="w-full">
                 <CommandsInfo
                   {commands}
+                  bind:properties
                   bind:data={rules[index].condition}
                   deep={0}
                   acceptedTypes={['boolean']}
@@ -342,6 +345,7 @@
                   {#each rules[index].preActions || [] as value, indexx}
                     <CommandsInfo
                       {commands}
+                      bind:properties
                       bind:data={rules[index].preActions[indexx]}
                       deep={0}
                       acceptedTypes={['unknown']}

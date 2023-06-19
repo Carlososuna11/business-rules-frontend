@@ -96,7 +96,7 @@
       <div class="flex flex-wrap -mx-3 mb-2">
         <div class="w-full md:w-1/2 px-3">
           <label
-            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            class="block uppercase tracking-wide text-white text-xs font-bold mb-2"
             for={`value-type`}
           >
             Tipo de Campo
@@ -137,7 +137,7 @@
         {#if type == 'string'}
           <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
             <label
-              class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              class="block uppercase tracking-wide text-white text-xs font-bold mb-2"
               for={`object-value`}
             >
               Valor
@@ -152,7 +152,7 @@
         {:else if type == 'number'}
           <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
             <label
-              class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              class="block uppercase tracking-wide text-white text-xs font-bold mb-2"
               for={`object-value`}
             >
               Valor

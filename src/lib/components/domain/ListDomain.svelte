@@ -44,6 +44,15 @@
 </script>
 
 <div class="w-full lg:mx-auto">
+  <div class="w-full flex flex-col gap-1 pb-1 mx-auto mb-4">
+    <h3 class="text-xl text-[#383838] font-Syne font-bold">
+      Dominios Estáticos
+    </h3>
+    <p class="text-sm text-[#757575]">
+      A continuación se muestra una lista de dominios precargados en el sistema
+      que puede utilizar para crear sus reglas de negocio.
+    </p>
+  </div>
   <section class="w-full flex flex-col gap-4 bg-[#F5F5F65C] p-2 rounded-md">
     <div class="w-full">
       {#each domains as domain}
