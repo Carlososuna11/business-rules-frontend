@@ -20,10 +20,11 @@
   export let canDelete: boolean = true;
   export let properties: Property[] = [];
   export let onDelete: () => void = () => {};
+  let search = '';
 
   let dataCommand: unknown[] = [];
 
-  function getCategories() {
+  function getCategories(commands: CommandInfo[]) {
     const categories: CateroryInfo[] = [];
     commands.forEach((command) => {
       const category = categories.find((c) => c.id === command.category.id);
@@ -32,6 +33,24 @@
       }
     });
     return categories;
+  }
+
+  function filterCommands() {
+    // returns commands filtered by search
+    let response = commands.filter((command) => {
+      if (search === '') return true;
+      return command.name.toLowerCase().includes(search.toLowerCase());
+    });
+
+    response = response.filter((command) => {
+      return (
+        acceptedTypes.includes(command.returnType) ||
+        command.returnType === 'unknown' ||
+        acceptedTypes.includes('unknown')
+      );
+    });
+
+    return response;
   }
 
   const commandMap: Record<CommandType, string> = {
@@ -45,7 +64,8 @@
     value: false,
   };
 
-  const categories: CateroryInfo[] = getCategories();
+  let resultedCommands: CommandInfo[] = filterCommands();
+  let categories: CateroryInfo[] = getCategories(resultedCommands);
   let commandSelected: CommandInfo | undefined = idToCommand(data);
 
   function onSelectedCommand() {
@@ -108,6 +128,10 @@
   $: !commandSelected &&
     (typeof data !== 'object' || Array.isArray(data)) &&
     (modalInfo.value = true);
+
+  $: search.length > -1 &&
+    (resultedCommands = filterCommands()) &&
+    (categories = getCategories(resultedCommands));
 </script>
 
 <div>
@@ -375,6 +399,7 @@
           type="text"
           class="w-full h-ful outline-none pl-1 text-sm bg-inherit text-black"
           placeholder="Búsqueda"
+          bind:value={search}
         />
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <img class="cursor-pointer" src={SearchIcon} alt="Search icon" />
@@ -388,85 +413,86 @@
       defaultClass="text-gray-400"
     >
       {#each categories as category}
-        {#if commands.filter((command) => command.category.id === category.id && (acceptedTypes.includes(command.returnType) || command.returnType === 'unknown' || acceptedTypes.includes('unknown'))).length}
-          <AccordionItem id={category.id}>
-            <span slot="header">
-              <p>
-                <span class="font-bold">{category.name}</span>
-              </p>
-            </span>
-            <p class="mb-2 text-gray-500 dark:text-gray-400">
-              {category.description}
+        <AccordionItem id={category.id}>
+          <span slot="header">
+            <p>
+              <span class="font-bold">{category.name}</span>
             </p>
+          </span>
+          <p class="mb-2 text-gray-500 dark:text-gray-400">
+            {category.description}
+          </p>
 
-            <Accordion
-              class="bg-[#051127] my-2"
-              activeClasses="bg-gray-800 text-white focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800"
-              inactiveClasses="text-gray-400 bg-gray-800"
-              defaultClass="text-gray-400"
-            >
-              {#each commands as command}
-                {#if command.category.id === category.id && (acceptedTypes.includes(command.returnType) || command.returnType === 'unknown' || acceptedTypes.includes('unknown'))}
-                  <AccordionItem id={command.id}>
-                    <span slot="header">
-                      <p>
-                        <span class="font-bold">{command.name}</span>
-                      </p>
-                    </span>
-                    <p class="mb-2 text-gray-500 dark:text-gray-400">
-                      {command.description}
+          <Accordion
+            class="bg-[#051127] my-2"
+            activeClasses="bg-gray-800 text-white focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800"
+            inactiveClasses="text-gray-400 bg-gray-800"
+            defaultClass="text-gray-400"
+          >
+            {#each resultedCommands as command}
+              {#if command.category.id === category.id}
+                <AccordionItem id={command.id}>
+                  <span slot="header">
+                    <p>
+                      <span class="font-bold">{command.name}</span>
                     </p>
-                    <span class="my-1" />
+                  </span>
+                  <p class="mb-2 text-gray-500 dark:text-gray-400">
+                    {command.description}
+                  </p>
+                  <span class="my-1" />
 
-                    {#if command.examples.length}
-                      <p
-                        class="mb-2 text-gray-500 dark:text-gray-400 font-bold text-center"
+                  {#if command.examples.length}
+                    <p
+                      class="mb-2 text-gray-500 dark:text-gray-400 font-bold text-center"
+                    >
+                      Ejemplos
+                    </p>
+
+                    {#each command.examples as example}
+                      <code
+                        class="w-full flex justify-center text-sm sm:text-base inline-flex text-center items-center space-x-4 bg-gray-800 text-white p-1"
                       >
-                        Ejemplos
-                      </p>
-
-                      {#each command.examples as example}
-                        <code
-                          class="w-full flex justify-center text-sm sm:text-base inline-flex text-center items-center space-x-4 bg-gray-800 text-white p-1"
-                        >
-                          {example}
-                        </code>
-                      {/each}
-                    {/if}
-                    <div class="w-full flex justify-center mt-3">
-                      <button
-                        type="button"
-                        on:click={() => {
-                          data = {};
-                          commandSelected = command;
-                          if (
-                            commandSelected.argumentType === 'non-variable' &&
-                            Array.isArray(commandSelected.arguments)
-                          ) {
-                            dataCommand = commandSelected.arguments.map(
-                              () => ({})
-                            );
-                            if (commandSelected.type === 'context') {
-                              dataCommand[0] = '';
-                            }
+                        {example}
+                      </code>
+                    {/each}
+                  {/if}
+                  <div class="w-full flex justify-center mt-3">
+                    <button
+                      type="button"
+                      on:click={() => {
+                        data = {};
+                        commandSelected = command;
+                        if (
+                          commandSelected.argumentType === 'non-variable' &&
+                          Array.isArray(commandSelected.arguments)
+                        ) {
+                          dataCommand = commandSelected.arguments.map(
+                            () => ({})
+                          );
+                          if (commandSelected.type === 'context') {
+                            dataCommand[0] = '';
                           }
-                          onSelectedCommand();
-                          modalInfo.command = false;
-                          modalInfo.value = false;
-                          document.body.style.overflow = 'auto';
-                        }}
-                        class="text-[#051127] bg-white rounded-md px-4 py-2"
-                      >
-                        Utilizar
-                      </button>
-                    </div>
-                  </AccordionItem>
-                {/if}
-              {/each}
-            </Accordion>
-          </AccordionItem>
-        {/if}
+                        }
+                        onSelectedCommand();
+                        modalInfo.command = false;
+                        modalInfo.value = false;
+                        document.body.style.overflow = 'auto';
+                      }}
+                      class="text-[#051127] bg-white rounded-md px-4 py-2"
+                    >
+                      Utilizar
+                    </button>
+                  </div>
+                </AccordionItem>
+              {/if}
+            {/each}
+          </Accordion>
+        </AccordionItem>
       {/each}
     </Accordion>
+    {#if !resultedCommands.length}
+      <p class="text-center text-gray-400">No se encontraron resultados</p>
+    {/if}
   </Modal>
 {/if}
