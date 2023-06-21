@@ -339,14 +339,14 @@
                 </p>
               </div>
               <div class="w-full">
-                {#if typeof rules[index].preActions === 'undefined'}
+                {#if typeof rules[index].postActions === 'undefined'}
                   <span />
-                {:else if Array.isArray(rules[index].preActions)}
-                  {#each rules[index].preActions || [] as value, indexx}
+                {:else if Array.isArray(rules[index].postActions)}
+                  {#each rules[index].postActions || [] as value, indexx}
                     <CommandsInfo
                       {commands}
                       bind:properties
-                      bind:data={rules[index].preActions[indexx]}
+                      bind:data={rules[index].postActions[indexx]}
                       deep={0}
                       acceptedTypes={['unknown']}
                     >
@@ -354,9 +354,9 @@
                         type="button"
                         on:click={() =>
                           // @ts-ignore
-                          (rules[index].preActions = rules[
+                          (rules[index].postActions = rules[
                             index
-                          ].preActions.filter((_, i) => i !== indexx))}
+                          ].postActions.filter((_, i) => i !== indexx))}
                         class="bg-red-600 text-white rounded-md px-2 py-1 mr-2"
                       >
                         Eliminar Post Acción
@@ -368,11 +368,11 @@
                   <button
                     type="button"
                     on:click={() => {
-                      if (!Array.isArray(rules[index].preActions)) {
-                        rules[index].preActions = [{}];
+                      if (!Array.isArray(rules[index].postActions)) {
+                        rules[index].postActions = [{}];
                       }
-                      rules[index].preActions = [
-                        ...(rules[index].preActions || []),
+                      rules[index].postActions = [
+                        ...(rules[index].postActions || []),
                         {},
                       ];
                     }}
