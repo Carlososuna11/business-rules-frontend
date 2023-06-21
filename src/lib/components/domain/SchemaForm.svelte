@@ -311,13 +311,16 @@
       </Accordion>
     {/each}
   </div>
-  <div class="w-full flex justify-center mt-3">
-    <button
-      type="button"
-      class="bg-[#051127] text-white rounded-md px-2 py-2"
-      on:click={() => addField(undefined)}
-    >
-      Agregar campo
-    </button>
-  </div>
+  <!-- TODO: Test This -->
+  {#if mode !== 'array' && fields.length > 0}
+    <div class="w-full flex justify-center mt-3">
+      <button
+        type="button"
+        class="bg-[#051127] text-white rounded-md px-2 py-2"
+        on:click={() => addField(undefined)}
+      >
+        Agregar campo
+      </button>
+    </div>
+  {/if}
 </div>

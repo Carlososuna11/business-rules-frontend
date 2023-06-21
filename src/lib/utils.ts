@@ -2,6 +2,7 @@ import { encode } from 'plantuml-encoder';
 import type { JSONSchema7 } from 'json-schema';
 import type { Schema, Property, CommandTypesOptions, Engine } from './types';
 import { api } from './services/api.services';
+import { alertStore } from './stores';
 export const replaceStateWithQuery = (
   values: Record<string, string | undefined | null>
 ) => {
@@ -112,16 +113,15 @@ export function extractProperties(
     const propertyName = prefixName ? `${prefixName} ➞ ${title}` : title;
     const propertyValue = prefix ? `${prefix}.${key}` : key;
 
+    properties.push({
+      name: propertyName,
+      value: propertyValue,
+      type: property.type as CommandTypesOptions,
+    });
     if (property.type === 'object') {
       properties.push(
         ...extractProperties(property, propertyName, propertyValue)
       );
-    } else {
-      properties.push({
-        name: propertyName,
-        value: propertyValue,
-        type: property.type as CommandTypesOptions,
-      });
     }
   }
 
@@ -133,7 +133,11 @@ export async function engineToDiagram(engine: Engine) {
     const response = await api.engineToDiagram(engine);
     return getUrlDiagram(response.diagram);
   } catch (error) {
-    console.error(error);
+    alertStore.set({
+      message: '',
+      color: 'red',
+      visible: false,
+    });
     return '';
   }
 }
