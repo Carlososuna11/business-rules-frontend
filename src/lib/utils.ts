@@ -88,7 +88,9 @@ function jsonToPlantUML(
 
 export function jsonSchemaToPlantUML(jsonSchema: JSONSchema7 | Schema) {
   return (
-    '@startuml\n' + jsonToPlantUML(jsonSchema as JsonSchema, 'root') + '@enduml'
+    '@startuml\n<style>\nclass {\nPadding 5\nRoundCorner 30\n}\n</style>\nleft to right direction\nscale 4000 width\n' +
+    jsonToPlantUML(jsonSchema as JsonSchema, 'root') +
+    '@enduml'
   );
 }
 
