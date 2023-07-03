@@ -312,7 +312,7 @@
     {/each}
   </div>
   <!-- TODO: Test This -->
-  {#if mode !== 'array' && fields.length > 0}
+  {#if (mode !== 'array' && fields.length > -1) || (mode === 'array' && fields.length === 0)}
     <div class="w-full flex justify-center mt-3">
       <button
         type="button"

@@ -154,7 +154,7 @@
                     id={`final-property-${index}`}
                     type="checkbox"
                     name="bordered-checkbox"
-                    bind:value={rules[index].final}
+                    bind:checked={rules[index].final}
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
                   />
                   <label
